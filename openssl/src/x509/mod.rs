@@ -417,6 +417,27 @@ impl X509Ref {
         }
     }
 
+    /// Returns this certificate's CRL distribution points, if they exist.
+    ///
+    /// This corresponds to [`X509_get_ext_d2i`] called with `NID_crl_distribution_points`.
+    ///
+    /// [`X509_get_ext_d2i`]: https://www.openssl.org/docs/man1.1.0/crypto/X509_get_ext_d2i.html
+    pub fn crl_distribution_points(&self) -> Option<Stack<GeneralName>> {
+        unsafe {
+            let stack = ffi::X509_get_ext_d2i(
+                self.as_ptr(),
+                ffi::NID_crl_distribution_points,
+                ptr::null_mut(),
+                ptr::null_mut(),
+            );
+            if stack.is_null() {
+                None
+            } else {
+                Some(Stack::from_ptr(stack as *mut _))
+            }
+        }
+    }
+    
     /// Returns this certificate's subject alternative name entries, if they exist.
     ///
     /// This corresponds to [`X509_get_ext_d2i`] called with `NID_subject_alt_name`.
