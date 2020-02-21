@@ -422,7 +422,7 @@ impl X509Ref {
     /// This corresponds to [`X509_get_ext_d2i`] called with `NID_crl_distribution_points`.
     ///
     /// [`X509_get_ext_d2i`]: https://www.openssl.org/docs/man1.1.0/crypto/X509_get_ext_d2i.html
-    pub fn crl_distribution_points(&self) -> Option<Stack<GeneralName>> {
+    pub fn crl_distribution_points(&self) -> Option<Stack<OpensslString>> {
         unsafe {
             let stack = ffi::X509_get_ext_d2i(
                 self.as_ptr(),
